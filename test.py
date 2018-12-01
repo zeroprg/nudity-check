@@ -209,10 +209,9 @@ def customPredict(test_data, config, modelFile):
         mod = load_model(modelFile, custom_objects={loss_func: loss_function})
     else:
         mod = load_model(modelFile)
-    
-    # disabling temporarily
-    #if os.environ.get("GPU_ENABLED", "0") == "1":
-    #    mod.compile (loss='categorical_crossentropy', optimizer='adam', context=["GPU(0)"])
+
+#    if os.environ.get("GPU_ENABLED", "0") == "1":
+#        mod.compile (loss='categorical_crossentropy', optimizer='adam', context=["GPU(0)"])
         
     return mod.predict(test_data)
 
