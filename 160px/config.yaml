@@ -1,0 +1,109 @@
+data:
+  dataset: {name: nudity_3739, samples: 7478, type: private}
+  datasetLoadOption: full
+  kfold: 1
+  mapping:
+    name:
+      options: {Augmentation: true, Height: '160', Normalization: true, Resize: true,
+        Scaling: '1', Width: '160', height_shift_range: '0.25', horizontal_flip: true,
+        pretrained: InceptionV3, rotation_range: '180', shear_range: '0.25', vertical_flip: true,
+        width_shift_range: '0.25'}
+      port: InputPort0
+      shape: ''
+      type: Image
+    rate:
+      options: {}
+      port: OutputPort0
+      shape: ''
+      type: Categorical
+  numPorts: 1
+  samples: {split: 2, test: 1495, training: 4486, validation: 1495}
+  shuffle: true
+model:
+  connections:
+  - {source: Dense_2, target: Output_1}
+  - {source: Convolution2D_2, target: MaxPooling2D_4}
+  - {source: Convolution2D_31, target: MaxPooling2D_20}
+  - {source: MaxPooling2D_15, target: Dropout_1}
+  - {source: Input_1, target: Convolution2D_2}
+  - {source: Dropout_1, target: Flatten_1}
+  - {source: Dense_1, target: Dropout_2}
+  - {source: MaxPooling2D_4, target: Convolution2D_31}
+  - {source: MaxPooling2D_20, target: Convolution2D_13}
+  - {source: Convolution2D_13, target: MaxPooling2D_15}
+  - {source: Flatten_1, target: Dense_1}
+  - {source: Dropout_2, target: Dense_2}
+  layers:
+  - args: {}
+    class: Input
+    name: Input_1
+    x: 74
+    y: 65
+  - args: {}
+    class: Output
+    name: Output_1
+    x: 643
+    y: 698
+  - args: {activation: relu, nb_col: '6', nb_filter: '64', nb_row: '6'}
+    class: Convolution2D
+    name: Convolution2D_2
+    x: 70
+    y: 219
+  - args: {p: '0.25'}
+    class: Dropout
+    name: Dropout_1
+    x: 73
+    y: 753
+  - args: {}
+    class: Flatten
+    name: Flatten_1
+    x: 645
+    y: 83
+  - args: {activation: softsign, output_dim: '40'}
+    class: Dense
+    name: Dense_1
+    x: 649
+    y: 204
+  - args: {p: '0.45'}
+    class: Dropout
+    name: Dropout_2
+    x: 647
+    y: 343
+  - args: {activation: softmax, output_dim: '2'}
+    class: Dense
+    name: Dense_2
+    x: 646
+    y: 505
+  - args: {activation: relu, nb_col: '2', nb_filter: '10', nb_row: '2'}
+    class: Convolution2D
+    name: Convolution2D_13
+    x: 58
+    y: 488
+  - args: {pool_size: '(4,4)'}
+    class: MaxPooling2D
+    name: MaxPooling2D_4
+    x: 72
+    y: 319
+  - args: {pool_size: '(2,2)'}
+    class: MaxPooling2D
+    name: MaxPooling2D_15
+    x: 63
+    y: 633
+  - args: {activation: relu, nb_col: '4', nb_filter: '32', nb_row: '4'}
+    class: Convolution2D
+    name: Convolution2D_31
+    x: 308
+    y: 394
+  - args: {pool_size: '(4,4)'}
+    class: MaxPooling2D
+    name: MaxPooling2D_20
+    x: 339
+    y: 516
+params:
+  advance_params: true
+  batch_size: 200
+  is_custom_loss: false
+  loss_func: categorical_crossentropy
+  num_epoch: 100
+  optimizer: {name: Adadelta, rho: '0.8'}
+project: nudity_check
