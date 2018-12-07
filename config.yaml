@@ -4,9 +4,9 @@ data:
   kfold: 1
   mapping:
     name:
-      options: {Augmentation: true, Height: '200', Normalization: true, Resize: true,
-        Scaling: '1', Width: '200', height_shift_range: '0.25', horizontal_flip: true,
-        pretrained: None, rotation_range: '180', shear_range: '0.25', vertical_flip: true,
+      options: {Augmentation: true, Height: '250', Normalization: true, Resize: true,
+        Scaling: '1', Width: '250', height_shift_range: '0.25', horizontal_flip: true,
+        pretrained: InceptionV3, rotation_range: '180', shear_range: '0.25', vertical_flip: true,
         width_shift_range: '0.25'}
       port: InputPort0
       shape: ''
@@ -17,50 +17,53 @@ data:
       shape: ''
       type: Categorical
   numPorts: 1
-  samples: {split: 1, test: 0, training: 5982, validation: 1495}
+  samples: {split: 2, test: 1495, training: 4486, validation: 1495}
   shuffle: true
 model:
   connections:
-  - {source: Convolution2D_2, target: MaxPooling2D_1}
+  - {source: Convolution2D_2, target: MaxPooling2D_4}
   - {source: Convolution2D_1, target: Convolution2D_2}
+  - {source: Convolution2D_13, target: MaxPooling2D_1}
+  - {source: Dropout_9, target: Convolution2D_13}
   - {source: MaxPooling2D_1, target: Dropout_1}
-  - {source: Dropout_1, target: Flatten_1}
-  - {source: Dense_2, target: Output_1}
-  - {source: Dropout_2, target: Dense_2}
-  - {source: Dense_1, target: Dropout_2}
-  - {source: Flatten_1, target: Dense_1}
   - {source: Input_1, target: Convolution2D_1}
+  - {source: Dense_2, target: Output_1}
+  - {source: Dropout_1, target: Flatten_1}
+  - {source: MaxPooling2D_4, target: Dropout_9}
+  - {source: Dense_1, target: Dropout_2}
+  - {source: Dropout_2, target: Dense_2}
+  - {source: Flatten_1, target: Dense_1}
   layers:
   - args: {}
     class: Input
     name: Input_1
-    x: 81
-    y: 82
+    x: 79
+    y: 32
   - args: {}
     class: Output
     name: Output_1
     x: 643
     y: 698
-  - args: {activation: relu, nb_col: '4', nb_filter: '32', nb_row: '4'}
+  - args: {activation: relu, nb_col: '6', nb_filter: '64', nb_row: '6'}
     class: Convolution2D
     name: Convolution2D_1
-    x: 83
-    y: 206
-  - args: {activation: relu, nb_col: '2', nb_filter: '4', nb_row: '2'}
+    x: 80
+    y: 147
+  - args: {activation: relu, nb_col: '4', nb_filter: '32', nb_row: '4'}
     class: Convolution2D
     name: Convolution2D_2
-    x: 84
-    y: 328
+    x: 80
+    y: 257
   - args: {pool_size: '(2,2)'}
     class: MaxPooling2D
     name: MaxPooling2D_1
-    x: 86
-    y: 482
-  - args: {p: '0.38'}
+    x: 274
+    y: 644
+  - args: {p: '0.25'}
     class: Dropout
     name: Dropout_1
-    x: 85
-    y: 604
+    x: 63
+    y: 731
   - args: {}
     class: Flatten
     name: Flatten_1
@@ -69,23 +72,38 @@ model:
   - args: {activation: softsign, output_dim: '40'}
     class: Dense
     name: Dense_1
-    x: 646
-    y: 203
-  - args: {p: '0.68'}
+    x: 649
+    y: 204
+  - args: {p: '0.45'}
     class: Dropout
     name: Dropout_2
     x: 647
-    y: 344
+    y: 343
   - args: {activation: softmax, output_dim: '2'}
     class: Dense
     name: Dense_2
     x: 646
     y: 505
+  - args: {activation: relu, nb_col: '2', nb_filter: '10', nb_row: '2'}
+    class: Convolution2D
+    name: Convolution2D_13
+    x: -8
+    y: 554
+  - args: {pool_size: '(4,4)'}
+    class: MaxPooling2D
+    name: MaxPooling2D_4
+    x: 76
+    y: 364
+  - args: {p: '0.10'}
+    class: Dropout
+    name: Dropout_9
+    x: 278
+    y: 460
 params:
   advance_params: true
-  batch_size: 285
+  batch_size: 60
   is_custom_loss: false
   loss_func: categorical_crossentropy
-  num_epoch: 300
-  optimizer: {name: Adadelta, rho: '0.98'}
+  num_epoch: 60
+  optimizer: {name: Adadelta, rho: '0.5'}
 project: nudity_check
